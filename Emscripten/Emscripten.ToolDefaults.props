@@ -1,18 +1,22 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemDefinitionGroup>
     <ClCompile>
+      <ObjectFileName Condition="'%(ClCompile.ObjectFileName)'       == ''">$(IntDir)%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)%(Filename).o</ObjectFileName>
+      
       <PreprocessorDefinitions  Condition="'%(ClCompile.PreprocessorDefinitions)'   == ''"></PreprocessorDefinitions>
       <Warnings                 Condition="'%(ClCompile.Warnings)'                  == ''">NormalWarnings</Warnings>
       <WarningsAsErrors         Condition="'%(ClCompile.WarningsAsErrors)'          == ''">false</WarningsAsErrors>
-      <WarnSystemHeaders         Condition="'%(ClCompile.WarnSystemHeaders)'          == ''">false</WarnSystemHeaders>
+      <WarnSystemHeaders        Condition="'%(ClCompile.WarnSystemHeaders)'         == ''">false</WarnSystemHeaders>
       <EchoCommandLines         Condition="'%(ClCompile.EchoCommandLines)'          == ''">false</EchoCommandLines>
-
-      <ObjectFileName Condition="'%(ClCompile.ObjectFileName)'       == ''">$(IntDir)%(Filename).o</ObjectFileName>
-      <ObjectFileName>$(IntDir)%(Filename).o</ObjectFileName>
-
+      <ErrorLimit      Condition="'%(ClCompile.ErrorLimit)'       == ''">20</ErrorLimit>
+      
       <CompileAs                Condition="'%(ClCompile.CompileAs)'                 == ''">Default</CompileAs>
 
-      <ErrorLimit      Condition="'%(ClCompile.ErrorLimit)'       == ''">20</ErrorLimit>
+      <PrecompiledHeader        Condition="'%(ClCompile.PrecompiledHeader)'         == ''">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile Condition="'%(ClCompile.PrecompiledHeaderOutputFile)' == ''">$(IntDir)$(TargetName).pch.h</PrecompiledHeaderOutputFile>
+      
+      
       <UseThreadSanitizer        Condition="'%(ClCompile.UseThreadSanitizer)'         == ''">false</UseThreadSanitizer>
       <NotSaneOperatorNew        Condition="'%(ClCompile.NotSaneOperatorNew)'         == ''">false</NotSaneOperatorNew>
       <LanguageStandardMode        Condition="'%(ClCompile.LanguageStandardMode)'         == ''">NoLanguageStandardSet</LanguageStandardMode>
@@ -36,9 +40,19 @@
       <DependencyFileName>"$(IntDir)%(FileName).d"</DependencyFileName>
       <!--      <EmscriptenCompileFlags Condition="'%(ClCompile.EmscriptenCompileFlags)' == '' and '$(PlatformToolset)' == 'emcc'">-c -m32 -Xclang -triple=i386-pc-linux-gnu -nostdinc -Xclang -nobuiltininc -Xclang -nostdinc++ -Xclang -nostdsysteminc -emit-llvm</EmscriptenCompileFlags> -->
       <TargetArchitecture        Condition="'%(ClCompile.TargetArchitecture)'         == ''">NotSet</TargetArchitecture>
+      <PythonPlatform Condition="'$(SixtyFourBit)' == 'false'">x86</PythonPlatform>
+      <PythonPlatform Condition="'$(SixtyFourBit)' == 'true'">x86_64</PythonPlatform>
     </ClCompile>
   </ItemDefinitionGroup>
 
+  <!-- Compiler defaults. Additions for Visual Studio 2012 -->
+  <ItemDefinitionGroup Condition="$(VisualStudioVersion) != '10.0'">
+    <ClCompile>
+      <ProgramDataBaseFileName  Condition="'%(ClCompile.ProgramDataBaseFileName)'   == ''">$(IntDir)vs-tools.pdb</ProgramDataBaseFileName>
+      <TrackerLogDirectory      Condition="'%(ClCompile.TrackerLogDirectory)'       == ''">$(TLogLocation)</TrackerLogDirectory>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  
   <ItemDefinitionGroup Condition="'$(PlatformToolset)' == 'emcc'">
     <ClCompile>
       <GenerateLLVMByteCode        Condition="'%(ClCompile.GenerateLLVMByteCode)'         == ''">true</GenerateLLVMByteCode>

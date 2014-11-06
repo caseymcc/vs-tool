@@ -4,9 +4,17 @@
     <PlatformArchitecture>32</PlatformArchitecture>
     <PlatformToolset    Condition="'$(PlatformToolset)' == ''">emcc</PlatformToolset>
 
+    <PythonPlatform    Condition="'$(PythonPlatform)' == ''">x86</PythonPlatform>
+    <PythonPlatform    Condition="'$(SixtyFourBit)' == 'true'">x86_64</PythonPlatform>
+
     <IntDir Condition="'$(IntDir)'=='' AND '$(IntermediateOutputPath)'!=''">$(IntermediateOutputPath)</IntDir>
     <IntDir Condition="'$(IntDir)'=='' AND '$(IntermediateOutputPath)'==''">$(Platform)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(OutDir)'=='' AND '$(SolutionDir)' != ''">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <OutDir Condition="'$(OutDir)'=='' AND '$(SolutionDir)' == ''">$(IntDir)</OutDir>    
-  </PropertyGroup>	
+  </PropertyGroup>
+
+  <!-- VS2012 additions to the defaults. -->
+  <PropertyGroup Condition="$(VisualStudioVersion) != '10.0'">
+    <TargetName         Condition="'$(TargetName)'      == ''">$(ProjectName)</TargetName>
+  </PropertyGroup>
 </Project>

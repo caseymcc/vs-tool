@@ -68,6 +68,10 @@
     <EnumValue Name="emcc" DisplayName="Emscripten" />
 <!--    <EnumValue Name="nacl" DisplayName="NaCl (GCC)" /> -->
   </EnumProperty>
+  <EnumProperty Name="PythonPlatform" DisplayName="Python Platform" Category="General">
+    <EnumValue Name="x86" DisplayName="32bit" />
+    <EnumValue Name="x86_64" DisplayName="64bit" />
+  </EnumProperty>
 
   <EnumProperty Name="ConfigurationType" DisplayName="Configuration Type"
                 Description="Specifies the type of output this configuration generates."

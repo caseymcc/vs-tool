@@ -2,14 +2,18 @@
   <Import Project="$(VCTargetsPath)\Platforms\Emscripten\ImportBefore\*.targets" Condition="Exists('$(VCTargetsPath)\Platforms\Emscripten\ImportBefore')" />
   <Import Project="$(VCTargetsPath)\Microsoft.CppCommon.targets" />
 
-  <UsingTask TaskName="GCCCompile" AssemblyFile="$(VCTargetsPath)\Platforms\Emscripten\vs_android.Build.CPPTasks.Android.dll" />
-  <UsingTask TaskName="GCCLink" AssemblyFile="$(VCTargetsPath)\Platforms\Emscripten\vs_android.Build.CPPTasks.Android.dll" />
-  <UsingTask TaskName="GCCLib" AssemblyFile="$(VCTargetsPath)\Platforms\Emscripten\vs_android.Build.CPPTasks.Android.dll" />
+  <UsingTask TaskName="GCCCompile" AssemblyFile="$(VCTargetsPath)\Platforms\Emscripten\vs-android.Build.CPPTasks.Android.dll" />
+  <UsingTask TaskName="GCCLink" AssemblyFile="$(VCTargetsPath)\Platforms\Emscripten\vs-android.Build.CPPTasks.Android.dll" />
+  <UsingTask TaskName="GCCLib" AssemblyFile="$(VCTargetsPath)\Platforms\Emscripten\vs-android.Build.CPPTasks.Android.dll" />
 
   <UsingTask TaskName="VCMessage" AssemblyName="Microsoft.Build.CppTasks.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
 
   <PropertyGroup>
     <TrackFileAccess Condition="'$(TrackFileAccess)' == ''">true</TrackFileAccess>
+    
+    <!-- ToolArchitecture allows TrackedVCToolTask to use the correct (32/64-bit) TRACKER.EXE to invoke on select python -->
+    <ToolArchitecture Condition="'$(PythonPlatform)' == 'x86'">Native32Bit</ToolArchitecture>
+    <ToolArchitecture Condition="'$(PythonPlatform)' == 'x86_64'">Native64Bit</ToolArchitecture>
   </PropertyGroup>
 
   <!-- *******************************************************************************************
@@ -27,6 +31,15 @@
       </ClCompile>
     </ItemGroup>
 
+    <!-- Enable MinimalRebuildFromTracking for VS2012. VS2010 didn't require this for some reason. -->
+    <ItemGroup Condition="$(VisualStudioVersion) != '10.0'">
+      <ClCompile>
+        <MinimalRebuildFromTracking   Condition="'%(ClCompile.MinimalRebuildFromTracking)' == '' and '$(BuildType)' == 'Build' and '$(ForceRebuild)' != 'true'">true</MinimalRebuildFromTracking>
+      </ClCompile>
+    </ItemGroup>
+
+    <Message Text="GccCompiler: $(GccCompiler)" />
+    
     <GCCCompile Condition="'%(ClCompile.ExcludedFromBuild)'!='true'"
         BuildingInIDE                      ="$(BuildingInsideVisualStudio)"
         Sources                            ="@(ClCompile)"
@@ -39,16 +52,15 @@
         ToolPath                           ="$(CLToolPath)"
         TrackFileAccess                    ="$(TrackFileAccess)"
         MinimalRebuildFromTracking         ="%(ClCompile.MinimalRebuildFromTracking)"
-
+        ToolArchitecture                   ="$(ToolArchitecture)"
+                
         AcceptableNonZeroExitCodes         ="%(ClCompile.AcceptableNonZeroExitCodes)"
 
         GCCToolPath                        ="$(GccCompiler)"
         EchoCommandLines                   ="%(ClCompile.EchoCommandLines)"
-        GenerateDependencyFiles            ="false"
         PropertyXmlFile                    ="$(VCTargetsPath)\Platforms\Emscripten\Props\clang_compile.xml"
     >
     </GCCCompile>
-    <!--GenerateDependencyFiles            ="true" -->
 
   </Target>
 
@@ -66,6 +78,8 @@
       </Lib>
     </ItemGroup>
 
+    <Message Text="Lib GccCompiler: %(ClCompile.EchoCommandLines)" />
+    
     <GCCLib
         BuildingInIDE                  ="$(BuildingInsideVisualStudio)"
         Sources                        ="@(Lib)"
@@ -128,6 +142,7 @@
         ToolPath                       ="$(LinkToolPath)"
         TrackFileAccess                ="$(TrackFileAccess)"
         MinimalRebuildFromTracking     ="$(Link_MinimalRebuildFromTracking)"
+        ToolArchitecture               ="$(ToolArchitecture)"
 
         AcceptableNonZeroExitCodes     ="%(Link.AcceptableNonZeroExitCodes)"
 
@@ -152,6 +167,10 @@
        ******************************************************************************************* -->
   
   <Target Name="PlatformPrepareForBuild" DependsOnTargets="$(PlatformPrepareForBuildDependsOn)">
+    <!-- For VS2012. $(TargetName) doesn't seem to be defined where TargetPath is setup in the MS scripts. Crude fix for it. -->
+    <PropertyGroup Condition="$(VisualStudioVersion) != '10.0'">
+      <TargetPath>$([System.IO.Path]::Combine($(ProjectDir),$(OutDir)$(TargetName)$(TargetExt)))</TargetPath>
+    </PropertyGroup>
   </Target>
 	
   <Import Project="$(VCTargetsPath)\Platforms\Emscripten\PlatformToolsets\$(PlatformToolset)\Microsoft.Cpp.Emscripten.$(PlatformToolset).targets" Condition="(exists('$(VCTargetsPath)\Platforms\Emscripten\PlatformToolsets\$(PlatformToolset)\Microsoft.Cpp.Emscripten.$(PlatformToolset).targets'))" />
