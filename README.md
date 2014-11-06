@@ -1,7 +1,7 @@
 vs-tool
 =======
 
-vs-tool is a Visual Studio 2010 plugin to integrate external compiler/linker toolchains to the VS IDE.
+vs-tool is a Visual Studio 2010/2012 plugin to integrate external compiler/linker toolchains to the VS IDE.
 
 This plugin is a derivation of the excellent work done by Gavin Pugh for the <a href="http://code.google.com/p/vs-android/">vs-android</a> tool, and is therefore also licensed under the <a href="http://en.wikipedia.org/wiki/Zlib_License">Zlib license</a>.
 
@@ -24,6 +24,7 @@ For each <i>platform</i> you are interested in using (Clang, Emscripten, MinGW a
 1. Copy the folder <i>platform</i>\ from this repository to C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Platforms\\<i>platform</i>\ (or the corresponding location where MSBuild exists on your system)
 2. To enable an existing solution to be built via vs-tool, create a a platform for it from Configuration Manager -> Active Solution Platform -> New... -> <i>platform</i>.
 3. To choose the toolchain to build with, edit the dropdown list at Project Properties -> General -> Platform Toolset.
+3. Choose python architecture installed, edit the dropdown list at Project Properties -> General -> Python Platform. If there is a 32/64 bit miss match link phase will fail as MSbuild will call the wrong version of tracker.exe.
 
 Setup for MinGW
 ---------------
