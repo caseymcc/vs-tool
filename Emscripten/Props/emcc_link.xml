@@ -24,6 +24,10 @@
     </BoolProperty.DataSource>
   </BoolProperty>
   <BoolProperty Name="EchoCommandLines" DisplayName="Echo Command Lines" Description="If true, the commands emcc is invoked with are printed to stdout during linking." Category="General" />
+  <EnumProperty Name="Embind" DisplayName="Embind" Category="General">
+    <EnumValue Name="Disabled" DisplayName="Disabled" />
+    <EnumValue Name="Enabled" DisplayName="Enabled" Description="Compiles the source code using the Embind bindings to connect C/C++ and JavaScript." Switch="--bind" />
+  </EnumProperty>
 
   <EnumProperty Name="LinkerOptimizationLevel" DisplayName="Optimization" Category="General">
     <EnumValue Name="OptimizationNotSet" DisplayName="Not set (default to -O0)" />

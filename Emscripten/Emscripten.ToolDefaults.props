@@ -93,6 +93,7 @@
       <OutputFile                 Condition="'%(Link.OutputFile)'                   == ''">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories Condition="'%(Link.AdditionalLibraryDirectories)' == ''"></AdditionalLibraryDirectories>
       <EchoCommandLines           Condition="'%(Link.EchoCommandLines)'             == ''">false</EchoCommandLines>
+      <Embind           Condition="'%(Link.Embind)'             == ''">Disable</Embind>
 
       <AdditionalDependencies     Condition="'%(Link.AdditionalDependencies)'       == ''"></AdditionalDependencies>
 

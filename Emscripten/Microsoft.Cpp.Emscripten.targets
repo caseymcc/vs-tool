@@ -147,6 +147,7 @@
         AcceptableNonZeroExitCodes     ="%(Link.AcceptableNonZeroExitCodes)"
 
         EchoCommandLines               ="%(Link.EchoCommandLines)"        
+        Embind                         ="%(Link.Embind)"        
         GCCToolPath                    ="$(GccLinker)"        
         PropertyXmlFile                ="$(VCTargetsPath)\Platforms\Emscripten\Props\emcc_link.xml"
     >
